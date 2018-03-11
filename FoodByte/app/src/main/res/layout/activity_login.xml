@@ -17,7 +17,7 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDarkLogin">
+        android:background="#000">
 
     </RelativeLayout>
 
@@ -63,30 +63,14 @@
         android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/ic_account_circle_black_24dp"
-        android:tint="@color/colorWhite"
-        app:layout_constraintBottom_toTopOf="@+id/lblAppTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/lblAppTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/amastery_script"
-
-        android:text="Hungy Koala"
-        android:textColor="@color/colorWhite"
-        android:textSize="32sp"
-        android:textStyle="bold"
+        android:src="@drawable/foodhub_logo"
         app:layout_constraintBottom_toTopOf="@+id/bntLogInGoogle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 
 </android.support.constraint.ConstraintLayout>

@@ -48,6 +48,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+
 public class RestuarantAndProductActivity extends AppCompatActivity {
 
     /**
@@ -132,41 +135,6 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
-     */
-/*    public static class PlaceholderFragment extends Fragment {
-        *//**
-     * The fragment argument representing the section number for this
-     * fragment.
-     *//*
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        *//**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     *//*
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_test_tabed, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }*/
-
-    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
@@ -203,7 +171,7 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
     private void getDeviceLocation() {
 
 
-        try {
+       /* try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
@@ -218,12 +186,9 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
                                         mLastKnownLocation.getLongitude());
                             }
                             System.out.println(mLastKnownLocation.getLatitude()+" "+mLastKnownLocation.getLongitude());
-
-
                           //  restaurantFragment.getFragmentManager().beginTransaction().detach(restaurantFragment).attach(restaurantFragment).commit();
-                          /*  RestaurantFragment fragment = (RestaurantFragment) getSupportFragmentManager().findFragmentByTag("RestaurantFragment");
-                            getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();*/
-
+                          *//*  RestaurantFragment fragment = (RestaurantFragment) getSupportFragmentManager().findFragmentByTag("RestaurantFragment");
+                            getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();*//*
                             DeviceCurrentLocationMap deviceCurrentLocationMap = new DeviceCurrentLocationMap(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
                             Map<String,Object> postValue = deviceCurrentLocationMap.toMap();
                             Map<String,Object> childupdates = new HashMap<>();
@@ -244,11 +209,11 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
                                 else {
                                     if (addresses.size() > 0) {
                                         for (int i = 0;i<addresses.size();i++){
-                             /*  Log.i("Location",addresses.get(i).getAddressLine(0)+", "+addresses.get(i).getFeatureName() + ", " + addresses.get(i).getLocality() +", " + addresses.get(i).getAdminArea()+ ", " + addresses.get(i).getFeatureName() + ", " + addresses.get(i).getCountryName());*/
+                             *//*  Log.i("Location",addresses.get(i).getAddressLine(0)+", "+addresses.get(i).getFeatureName() + ", " + addresses.get(i).getLocality() +", " + addresses.get(i).getAdminArea()+ ", " + addresses.get(i).getFeatureName() + ", " + addresses.get(i).getCountryName());*//*
                                             Log.i("Location",addresses.get(i).getLocality()+", "+addresses.get(i).getSubAdminArea()+", "+addresses.get(i).getAdminArea()+ ", " + addresses.get(i).getCountryName());
-                                           /* lblLocation.setText(addresses.get(i).getLocality()+", "+addresses.get(i).getSubAdminArea()+", "+addresses.get(i).getAdminArea()+ ", " + addresses.get(i).getCountryName());
+                                           *//* lblLocation.setText(addresses.get(i).getLocality()+", "+addresses.get(i).getSubAdminArea()+", "+addresses.get(i).getAdminArea()+ ", " + addresses.get(i).getCountryName());
                                             restoLocationLatitude = mLastKnownLocation.getLatitude();
-                                            restoLocationLongitude = mLastKnownLocation.getLongitude();*/
+                                            restoLocationLongitude = mLastKnownLocation.getLongitude();*//*
                                         }
                                     }
                                 }
@@ -270,7 +235,21 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
             }
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
-        }
+        }*/
+
+        SmartLocation.with(RestuarantAndProductActivity.this).location().start(new OnLocationUpdatedListener() {
+            @Override
+            public void onLocationUpdated(Location location) {
+
+                DeviceCurrentLocationMap deviceCurrentLocationMap = new DeviceCurrentLocationMap(location.getLatitude(),location.getLongitude());
+                Map<String,Object> postValue = deviceCurrentLocationMap.toMap();
+                Map<String,Object> childupdates = new HashMap<>();
+                childupdates.put(FirebaseAuth.getInstance().getUid(),postValue);
+                FirebaseDatabase.getInstance().getReference().child("deviceCurrentLocation").setValue(childupdates);
+
+            }
+        });
+
     }
 
 

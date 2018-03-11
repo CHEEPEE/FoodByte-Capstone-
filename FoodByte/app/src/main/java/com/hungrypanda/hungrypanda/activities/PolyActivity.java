@@ -1,5 +1,6 @@
 package com.hungrypanda.hungrypanda.activities;
 
+import android.graphics.Point;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.ahmadrosid.lib.drawroutemap.DrawMarker;
+import com.ahmadrosid.lib.drawroutemap.DrawRouteMaps;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -19,6 +22,7 @@ import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -63,6 +67,7 @@ public class PolyActivity extends AppCompatActivity
     private static final int PATTERN_DASH_LENGTH_PX = 20;
     private static final int PATTERN_GAP_LENGTH_PX = 20;
     private static final PatternItem DOT = new Dot();
+    private GoogleMap mMap;
     private static final PatternItem DASH = new Dash(PATTERN_DASH_LENGTH_PX);
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
 
@@ -111,7 +116,7 @@ public class PolyActivity extends AppCompatActivity
                 deviceCurrentLocation.setLatitude(deviceCurrentLocationMap.Latitude);
                 deviceCurrentLocation.setLongitude(deviceCurrentLocationMap.Longitude);
 
-                Polyline polyline1;
+              /*  Polyline polyline1;
                 polyline1 = googleMap.addPolyline(new PolylineOptions()
                         .clickable(true).color(getResources().getColor(R.color.colorPrimary))
                         .add(
@@ -120,7 +125,21 @@ public class PolyActivity extends AppCompatActivity
                                ));
                 // Store a data object with the polyline, used here to indicate an arbitrary type.
                 polyline1.setTag("A");
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(deviceCurrentLocation.getLatitude(), deviceCurrentLocation.getLongitude()), 15));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(deviceCurrentLocation.getLatitude(), deviceCurrentLocation.getLongitude()), 15));*/
+                mMap = googleMap;
+                LatLng origin = new LatLng(deviceCurrentLocation.getLatitude(),deviceCurrentLocation.getLongitude());
+                LatLng destination = new LatLng(restaurantLocation.getLatitude(),restaurantLocation.getLongitude());
+                DrawRouteMaps.getInstance(PolyActivity.this)
+                        .draw(origin, destination, mMap);
+                DrawMarker.getInstance(PolyActivity.this).draw(mMap, origin, R.drawable.ic_restaurant_menu_white_24dp, "Origin Location");
+                DrawMarker.getInstance(PolyActivity.this).draw(mMap, destination, R.drawable.ic_restaurant_white_24dp, "Destination Location");
+
+                LatLngBounds bounds = new LatLngBounds.Builder()
+                        .include(origin)
+                        .include(destination).build();
+                Point displaySize = new Point();
+                getWindowManager().getDefaultDisplay().getSize(displaySize);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, displaySize.x, 250, 30));
 
                 // Set listeners for click events.
 
@@ -129,10 +148,11 @@ public class PolyActivity extends AppCompatActivity
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+
             }
         });
-        googleMap.setOnPolylineClickListener(this);
-        googleMap.setOnPolygonClickListener(this);
+//        googleMap.setOnPolylineClickListener(this);
+//        googleMap.setOnPolygonClickListener(this);
 
         // Style the polyline.
 
@@ -140,75 +160,20 @@ public class PolyActivity extends AppCompatActivity
         // Position the map's camera near Alice Springs in the center of Australia,
         // and set the zoom factor so most of Australia shows on the screen.
 
+
     }
 
     /**
      * Styles the polyline, based on type.
      * @param polyline The polyline object that needs styling.
      */
-    private void stylePolyline(Polyline polyline) {
-        String type = "";
-        // Get the data object stored with the polyline.
-        if (polyline.getTag() != null) {
-            type = polyline.getTag().toString();
-        }
 
-        switch (type) {
-            // If no type is given, allow the API to use the default.
-            case "A":
-                // Use a custom bitmap as the cap at the start of the line.
-             /*   polyline.setStartCap(
-                        new CustomCap(
-                                BitmapDescriptorFactory.fromResource(R.drawable.ic_arrow_back_black_24dp), 10));*/
-                break;
-            case "B":
-                // Use a round cap at the start of the line.
-                polyline.setStartCap(new RoundCap());
-                break;
-        }
-
-        polyline.setEndCap(new RoundCap());
-        polyline.setWidth(POLYLINE_STROKE_WIDTH_PX);
-        polyline.setColor(COLOR_BLACK_ARGB);
-        polyline.setJointType(JointType.ROUND);
-    }
 
     /**
      * Styles the polygon, based on type.
      * @param polygon The polygon object that needs styling.
      */
-    private void stylePolygon(Polygon polygon) {
-        String type = "";
-        // Get the data object stored with the polygon.
-        if (polygon.getTag() != null) {
-            type = polygon.getTag().toString();
-        }
 
-        List<PatternItem> pattern = null;
-        int strokeColor = COLOR_BLACK_ARGB;
-        int fillColor = COLOR_WHITE_ARGB;
-
-        switch (type) {
-            // If no type is given, allow the API to use the default.
-            case "alpha":
-                // Apply a stroke pattern to render a dashed line, and define colors.
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_GREEN_ARGB;
-                fillColor = COLOR_PURPLE_ARGB;
-                break;
-            case "beta":
-                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
-                pattern = PATTERN_POLYGON_BETA;
-                strokeColor = COLOR_ORANGE_ARGB;
-                fillColor = COLOR_BLUE_ARGB;
-                break;
-        }
-
-        polygon.setStrokePattern(pattern);
-        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
-        polygon.setStrokeColor(strokeColor);
-        polygon.setFillColor(fillColor);
-    }
 
     /**
      * Listens for clicks on a polyline.

@@ -69,7 +69,7 @@ public class Utils {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
         Date currentLocalTime = cal.getTime();
         DateFormat datef = new SimpleDateFormat("KK:mm a");
-// you can get seconds by adding  "...:ss" to it
+        // you can get seconds by adding  "...:ss" to it
         datef.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String localTime = datef.format(currentLocalTime);
         System.out.println(month+" "+day+", "+year+" at "+localTime);
@@ -81,5 +81,4 @@ public class Utils {
         String[] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
         return months[num_month-1];
     }
-
 }

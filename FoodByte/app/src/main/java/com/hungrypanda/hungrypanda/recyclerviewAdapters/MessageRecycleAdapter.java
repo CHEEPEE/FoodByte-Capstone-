@@ -30,9 +30,11 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView chatBubbleUser,chatBubbleOther;
+        public TextView chatBubbleUser,chatBubbleOther,userTimeStamp,otherTimeStamp;;
         public MyViewHolder(View view){
             super(view);
+            userTimeStamp = (TextView) view.findViewById(R.id.userTimestamp);
+            otherTimeStamp = (TextView) view.findViewById(R.id.otherTimestamp);
             chatBubbleUser = (TextView) view.findViewById(R.id.chatBubbleUser);
             chatBubbleOther = (TextView) view.findViewById(R.id.chatBubbleOther);
 
@@ -53,14 +55,26 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
     @Override
     public void onBindViewHolder(final MessageRecycleAdapter.MyViewHolder holder, final int position) {
        MessageDataModel messageDataModel = messageDataModelArrayList.get(position);
-        if (messageDataModel.getUserID().equals(FirebaseAuth.getInstance().getUid())){
-            holder.chatBubbleUser.setText(messageDataModel.getMessage());
-            holder.chatBubbleOther.setVisibility(View.INVISIBLE);
-        }else {
-            holder.chatBubbleOther.setText(messageDataModel.getMessage());
-            holder.chatBubbleUser.setVisibility(View.INVISIBLE);
-        }
 
+        if (!messageDataModel.getUserID().equals(FirebaseAuth.getInstance().getUid())){
+            holder.chatBubbleOther.setVisibility(View.VISIBLE);
+            holder.otherTimeStamp.setVisibility(View.VISIBLE);
+            holder.chatBubbleOther.setText(messageDataModel.getMessage());
+            holder.otherTimeStamp.setText(messageDataModel.getTimestamp());
+            //set invisible
+            holder.userTimeStamp.setVisibility(View.INVISIBLE);
+            holder.chatBubbleUser.setVisibility(View.INVISIBLE);
+
+        }else {
+            holder.chatBubbleUser.setVisibility(View.VISIBLE);
+            holder.userTimeStamp.setVisibility(View.VISIBLE);
+            holder.chatBubbleUser.setText(messageDataModel.getMessage());
+            holder.userTimeStamp.setText(messageDataModel.getTimestamp());
+            //set invisible
+            holder.chatBubbleOther.setVisibility(View.INVISIBLE);
+            holder.otherTimeStamp.setVisibility(View.INVISIBLE);
+
+        }
         // System.out.println(messageDataModel.getMessage());
      /*  holder.ratingBar.setRating(Float.parseFloat(restaurantUserRating.getUserRating().toString()));
        System.out.println(restaurantUserRating.userReview());

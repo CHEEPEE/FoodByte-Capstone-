@@ -9,4 +9,7 @@
     <color name="colorTextPrimary">#424242</color>
     <color name="colorBanner">#ef9a9a</color><!--#772b2b2b-->
     <color name="cardtransBannerColorMenu">#e0ef5350</color>
+    <color name="colorBlack">#000</color>
+    <color name="colorOrange">#F9A11F</color>
+    <color name="colorRouteLine">#FF4081</color>
 </resources>

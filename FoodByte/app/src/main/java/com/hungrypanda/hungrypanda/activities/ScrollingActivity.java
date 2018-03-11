@@ -237,10 +237,8 @@ RecyclerView.LayoutManager layoutManager;
             final Dialog dialog = new Dialog(activity);
             getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.user_rating_dialog);
-
 
             userRatingRecycler = new UserRatingRecycler(context,restaurantUserRatingsArray,restaurantID);
             RecyclerView.LayoutManager dlayoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
@@ -252,6 +250,7 @@ RecyclerView.LayoutManager layoutManager;
 
         }
     }
+
     public class ratingAndReviewDialog {
         int ratingNumber=0;
         ImageView starOne,starTwo,starThree,starFour,starFive;
