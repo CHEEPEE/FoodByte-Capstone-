@@ -9,12 +9,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.hungrypanda.hungrypanda.AppModules.GlideApp;
 import com.hungrypanda.hungrypanda.R;
 import com.hungrypanda.hungrypanda.datamodels.MessageDataModel;
 import com.hungrypanda.hungrypanda.datamodels.RestaurantUserRating;
 import com.hungrypanda.hungrypanda.mapModels.MessageMapmodel;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Keji's Lab on 26/12/2017.
@@ -28,11 +31,16 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
 
 
 
+
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView chatBubbleUser,chatBubbleOther,userTimeStamp,otherTimeStamp;;
+        public TextView chatBubbleUser,chatBubbleOther,userTimeStamp,otherTimeStamp;
+        public CircleImageView imgUser;
+        public CircleImageView imgOther;
         public MyViewHolder(View view){
             super(view);
+            imgOther = (CircleImageView)view.findViewById(R.id.userImgOther);
+            imgUser = (CircleImageView) view.findViewById(R.id.userImgUser);
             userTimeStamp = (TextView) view.findViewById(R.id.userTimestamp);
             otherTimeStamp = (TextView) view.findViewById(R.id.otherTimestamp);
             chatBubbleUser = (TextView) view.findViewById(R.id.chatBubbleUser);
@@ -61,6 +69,11 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
             holder.otherTimeStamp.setVisibility(View.VISIBLE);
             holder.chatBubbleOther.setText(messageDataModel.getMessage());
             holder.otherTimeStamp.setText(messageDataModel.getTimestamp());
+            try {
+                GlideApp.with(context).load(messageDataModel.getUserImg()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.imgOther);
+            }catch (NullPointerException e){
+                System.out.println(e);
+            }
             //set invisible
             holder.userTimeStamp.setVisibility(View.INVISIBLE);
             holder.chatBubbleUser.setVisibility(View.INVISIBLE);
@@ -73,6 +86,11 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
             //set invisible
             holder.chatBubbleOther.setVisibility(View.INVISIBLE);
             holder.otherTimeStamp.setVisibility(View.INVISIBLE);
+            try {
+                GlideApp.with(context).load(messageDataModel.getUserImg()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.imgUser);
+            }catch (NullPointerException e){
+                System.out.println(e);
+            }
 
         }
         // System.out.println(messageDataModel.getMessage());

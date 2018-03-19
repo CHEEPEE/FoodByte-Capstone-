@@ -11,7 +11,11 @@ public class MessageDataModel {
     String timestamp;
     String username;
     String userID;
+    String userImg;
 
+    public String getUserImg(){
+        return userImg;
+    }
     public String getMsgkey(){
         return  msgkey;
     }
@@ -43,6 +47,9 @@ public class MessageDataModel {
     }
     public void setUserID(String uid){
         this.userID = uid;
+    }
+    public void setUserImg(String url){
+        this.userImg = url;
     }
 }
 

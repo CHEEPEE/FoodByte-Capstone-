@@ -1,5 +1,7 @@
 package com.hungrypanda.hungrypanda.datamodels;
 
+import java.util.Date;
+
 /**
  * Created by Keji's Lab on 22/01/2018.
  */
@@ -10,7 +12,14 @@ public class RestaurantUserRating {
     String userReview;
     Integer userRating;
     String username;
+    Date ratingDateTime;
+    String userImageUrl;
 
+
+    public String getUserImageUrl(){
+        return userImageUrl;
+    }
+    public Date getRatingDateTime;
     public String getRestaurantId(){
         return restuarantId;
     }
@@ -41,6 +50,12 @@ public class RestaurantUserRating {
     }
     public void setUsername(String usrname){
         this.username = usrname;
+    }
+    public void setUserImageUrl(String url){
+        this.userImageUrl = url;
+    }
+    public void setRatingDateTime(Date timestamp){
+        this.ratingDateTime = timestamp;
     }
 }
 

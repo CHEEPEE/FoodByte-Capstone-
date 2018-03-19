@@ -24,6 +24,8 @@ import com.hungrypanda.hungrypanda.utils.Utils;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Keji's Lab on 26/12/2017.
  */
@@ -38,10 +40,13 @@ public class UserRatingRecycler extends RecyclerView.Adapter<UserRatingRecycler.
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView lblUsername,lblRatingReview;
+        public TextView lblUsername,lblRatingReview,lbl_rating_num;
+        public CircleImageView circleImageView;
         public RatingBar ratingBar;
         public MyViewHolder(View view){
             super(view);
+            circleImageView = (CircleImageView) view.findViewById(R.id.circleImageView);
+            lbl_rating_num = (TextView) view.findViewById(R.id.lbl_rating_num);
             ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
             lblUsername = (TextView) view.findViewById(R.id.lblUsername);
             lblRatingReview = (TextView) view.findViewById(R.id.lblUserReview);
@@ -67,6 +72,13 @@ public class UserRatingRecycler extends RecyclerView.Adapter<UserRatingRecycler.
        System.out.println(restaurantUserRating.userReview());
        holder.lblUsername.setText(restaurantUserRating.getUsername());
        holder.lblRatingReview.setText(restaurantUserRating.userReview());
+       holder.lbl_rating_num.setText(restaurantUserRating.getUserRating().toString());
+        try {
+            GlideApp.with(context).load(restaurantUserRating.getUserImageUrl()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.circleImageView);
+        }catch (NullPointerException e){
+
+        }
+      //GlideApp.with(context).load(restaurantUserRating.get).placeholder(R.drawable.image_placeholder).centerCrop().into(itemImage);
 
     }
 

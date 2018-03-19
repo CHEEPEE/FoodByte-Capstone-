@@ -191,7 +191,7 @@ public class RecyclerViewRestaurantMenusAdapter extends RecyclerView.Adapter<Rec
                             new RestaurantMenuRatingMapModel(restaurantId,mAuth.getCurrentUser().getUid()
                             ,reviewEditText.getText().toString(),ratingBar.getRating(),mAuth.getCurrentUser().getDisplayName(),
                                     menuItemGridModel.getiName(),menuItemGridModel.getItemKey()
-                            ,null);
+                            ,null,mAuth.getCurrentUser().getPhotoUrl().toString());
                         Map<String,Object> postValue = restaurantMenuRatingMapModel.toMap();
                         Map<String,Object> childupdates = new HashMap<>();
                         childupdates.put(mAuth.getUid(),postValue);
@@ -204,7 +204,6 @@ public class RecyclerViewRestaurantMenusAdapter extends RecyclerView.Adapter<Rec
                     }
                 });
 
-
                 getMenusRatings.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -215,6 +214,11 @@ public class RecyclerViewRestaurantMenusAdapter extends RecyclerView.Adapter<Rec
                            menuRestaurantUserRating.setUsername(restaurantMenuRatingMapModel.username);
                            menuRestaurantUserRating.setUserRating(restaurantMenuRatingMapModel.userRating);
                            menuRestaurantUserRating.setUserReview(restaurantMenuRatingMapModel.userReview);
+                           try {
+                               menuRestaurantUserRating.setUserImageUrl(restaurantMenuRatingMapModel.imgUrl);
+                           }catch (NullPointerException e){
+
+                           }
                            menuRestaurantUserRatingsArray.add(menuRestaurantUserRating);
                            menuUserRatingRecycler.notifyDataSetChanged();
                        }

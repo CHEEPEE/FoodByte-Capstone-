@@ -19,16 +19,18 @@ public class RatingMapModel {
     public String userReview;
     public Integer userRating;
     public String username;
+    public String imgUri;
 
     public RatingMapModel(){
 
     }
-    public RatingMapModel(String restaurantId, String userId,String userReview,Integer userRating,String usrname){
+    public RatingMapModel(String restaurantId, String userId,String userReview,Integer userRating,String usrname,String img){
         this.restaurantId = restaurantId;
         this.userId = userId;
         this.userReview = userReview;
         this.userRating = userRating;
         this.username = usrname;
+        this.imgUri = img;
 
     }
     @Exclude
@@ -39,6 +41,7 @@ public class RatingMapModel {
         result.put("userReview",userReview);
         result.put("userRating",userRating);
         result.put("username",username);
+        result.put("imgUri",imgUri);
 
         return result;
     }

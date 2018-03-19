@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.util.Util;
@@ -47,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     MessageRecycleAdapter messageRecycleAdapter;
     Button btnSubmit;
     EditText inputMsg;
+    TextView restoLabel;
     ArrayList<MessageDataModel> messageDataModelsArrayList = new ArrayList<>();
     GoogleSignInClient googleSignInClient;
 
@@ -59,9 +61,10 @@ public class ChatActivity extends AppCompatActivity {
         System.out.println(restaurantId);
         chatRecyclerView = (RecyclerView) findViewById(R.id.chatListRecycleView);
         mAuth = FirebaseAuth.getInstance();
-
+        restoLabel =(TextView) findViewById(R.id.restoLabel);
         btnSubmit = (Button) findViewById(R.id.btnSend);
         inputMsg = (EditText) findViewById(R.id.inputmsg);
+        restoLabel.setText(getIntent().getExtras().getString("restoName"));
 
 
 
@@ -73,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
                 messageDataModel.setMessage(messageMapmodel.message);
                 messageDataModel.setUserID(messageMapmodel.userID);
                 messageDataModel.setTimestamp(messageMapmodel.timestamp);
+                messageDataModel.setUserImg(messageMapmodel.userImg);
                 messageDataModelsArrayList.add(messageDataModel);
                 messageRecycleAdapter.notifyDataSetChanged();
             }
@@ -118,7 +122,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (!inputMsg.getText().toString().trim().equals("")){
                     String key = mDataBase.push().getKey();
                     MessageMapmodel messageMapmodel = new MessageMapmodel(key
-                            ,inputMsg.getText().toString(),Utils.getDateToStrig(),mAuth.getCurrentUser().getDisplayName(),mAuth.getUid());
+                            ,inputMsg.getText().toString(),Utils.getDateToStrig(),mAuth.getCurrentUser().getDisplayName(),mAuth.getUid(),mAuth.getCurrentUser().getPhotoUrl().toString());
                     Map<String,Object> chatMsgValue = messageMapmodel.toMap();
                     Map<String,Object> childUpdates = new HashMap<>();
                     childUpdates.put(key,chatMsgValue);
@@ -137,35 +141,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-   /*     mDataBase.child(Utils.chattingSystem).child(Utils.chatsList).child(restaurantId).child(mAuth.getUid()).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
         messageRecycleAdapter = new MessageRecycleAdapter(ChatActivity.this,messageDataModelsArrayList,restaurantId);
         chatRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         chatRecyclerView.setAdapter(messageRecycleAdapter);

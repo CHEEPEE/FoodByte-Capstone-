@@ -75,6 +75,7 @@ RecyclerView.LayoutManager layoutManager;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
         context = ScrollingActivity.this;
+        System.out.println("get Month "+Utils.getMonth()+" "+Utils.getDay()+" "+Utils.getYear());
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         restaurantID = getIntent().getExtras().getString("key");
@@ -117,6 +118,7 @@ RecyclerView.LayoutManager layoutManager;
             public void onClick(View view) {
                 Intent i = new Intent(ScrollingActivity.this,ChatActivity.class);
                 i.putExtra("restoID",arrayStoreProfile.get(0).getRestaurantID());
+                i.putExtra("restoName", arrayStoreProfile.get(0).getStoreName());
                 startActivity(i);
                 finish();
 
@@ -137,6 +139,11 @@ RecyclerView.LayoutManager layoutManager;
                     restaurantUserRating.setUserRating(ratingMapModel.userRating);
                     restaurantUserRating.setUserReview(ratingMapModel.userReview);
                     restaurantUserRating.setUsername(ratingMapModel.username);
+                    try{
+                        restaurantUserRating.setUserImageUrl(ratingMapModel.imgUri);
+                    }catch (NullPointerException e){
+
+                    }
                     restaurantUserRatingsArray.add(restaurantUserRating);
                 }
                 ic_rating.setText((""+aveRating(ArrayRating)).substring(0,3));
@@ -277,7 +284,7 @@ RecyclerView.LayoutManager layoutManager;
                     }else {
                         //restorating -> restoid -> userid -> userRating
                         // -> userReview
-                        RatingMapModel ratingMapModel = new RatingMapModel(restaurantID,mAuth.getUid(),review.getText().toString(),ratingNumber,mAuth.getCurrentUser().getDisplayName());
+                        RatingMapModel ratingMapModel = new RatingMapModel(restaurantID,mAuth.getUid(),review.getText().toString(),ratingNumber,mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getPhotoUrl().toString());
                         Map<String,Object> postValue = ratingMapModel.toMap();
                         Map<String,Object> childUpdates = new HashMap<>();
                         childUpdates.put(mAuth.getUid(),postValue);

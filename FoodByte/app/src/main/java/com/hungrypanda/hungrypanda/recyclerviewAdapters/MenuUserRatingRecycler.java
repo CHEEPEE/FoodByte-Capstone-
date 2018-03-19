@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.hungrypanda.hungrypanda.AppModules.GlideApp;
 import com.hungrypanda.hungrypanda.R;
 import com.hungrypanda.hungrypanda.datamodels.MenuRestaurantUserRating;
 import com.hungrypanda.hungrypanda.datamodels.RestaurantUserRating;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Keji's Lab on 26/12/2017.
@@ -28,10 +31,13 @@ public class MenuUserRatingRecycler extends RecyclerView.Adapter<MenuUserRatingR
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView lblUsername,lblRatingReview;
+        public TextView lblUsername,lblRatingReview,lbl_rating_num;
         public RatingBar ratingBar;
+        public CircleImageView circleImageView;
         public MyViewHolder(View view){
             super(view);
+            circleImageView = (CircleImageView) view.findViewById(R.id.circleImageView);
+            lbl_rating_num = (TextView) view.findViewById(R.id.lbl_rating_num);
             ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
             lblUsername = (TextView) view.findViewById(R.id.lblUsername);
             lblRatingReview = (TextView) view.findViewById(R.id.lblUserReview);
@@ -59,6 +65,12 @@ public class MenuUserRatingRecycler extends RecyclerView.Adapter<MenuUserRatingR
        System.out.println(menuRestaurantUserRatingModel.userReview());
        holder.lblUsername.setText(menuRestaurantUserRatingModel.getUsername());
        holder.lblRatingReview.setText(menuRestaurantUserRatingModel.userReview());
+       holder.lbl_rating_num.setText(menuRestaurantUserRatingModel.getUserRating().toString());
+       try {
+           GlideApp.with(context).load(menuRestaurantUserRatingModel.getUserImageUrl()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.circleImageView);
+       }catch (NullPointerException e){
+
+       }
 
     }
 

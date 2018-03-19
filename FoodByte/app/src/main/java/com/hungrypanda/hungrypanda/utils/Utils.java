@@ -81,4 +81,33 @@ public class Utils {
         String[] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
         return months[num_month-1];
     }
+
+    public static String getMonth(){
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+        String getDate = c.getTime().toString().substring(4,10);
+        SimpleDateFormat df = new SimpleDateFormat("MM");
+        String formattedDate = df.format(c.getTime()).toString();
+
+        return Utils.getMonthInWords(formattedDate);
+    }
+
+    public static String getDay(){
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+        String getDate = c.getTime().toString().substring(4,10);
+        SimpleDateFormat df = new SimpleDateFormat("dd");
+        String formattedDate = df.format(c.getTime()).toString();
+
+        return formattedDate;
+    }
+    public static String getYear(){
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+        String getDate = c.getTime().toString().substring(4,10);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        String formattedDate = df.format(c.getTime()).toString();
+
+        return formattedDate;
+    }
 }

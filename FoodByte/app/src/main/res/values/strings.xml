@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hungry Panda</string>
+    <string name="app_name">Food Hub</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_test_tabed">TestTabed</string>
     <string name="restaurant_tab">Restaurants</string>

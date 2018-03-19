@@ -3,6 +3,7 @@ package com.hungrypanda.hungrypanda.recyclerviewAdapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +13,13 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.ahmadrosid.lib.drawroutemap.DrawMarker;
+import com.ahmadrosid.lib.drawroutemap.DrawRouteMaps;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.util.Util;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,18 +28,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hungrypanda.hungrypanda.AppModules.GlideApp;
 import com.hungrypanda.hungrypanda.R;
+import com.hungrypanda.hungrypanda.activities.PolyActivity;
+import com.hungrypanda.hungrypanda.activities.RestuarantAndProductActivity;
 import com.hungrypanda.hungrypanda.activities.ScrollingActivity;
 import com.hungrypanda.hungrypanda.datamodels.RestaurantLocationModel;
 import com.hungrypanda.hungrypanda.datamodels.RestaurantUserRating;
 import com.hungrypanda.hungrypanda.datamodels.StoreProfileModel;
+import com.hungrypanda.hungrypanda.datamodels.StoreProfileModelwithLocation;
 import com.hungrypanda.hungrypanda.mapModels.DeviceCurrentLocationMap;
 import com.hungrypanda.hungrypanda.mapModels.RatingMapModel;
 import com.hungrypanda.hungrypanda.mapModels.RestaurantLocationMapModel;
+import com.hungrypanda.hungrypanda.mapModels.StoreProfileInformationMap;
+import com.hungrypanda.hungrypanda.mapModels.StoreProfileInformationMapWithLocation;
 import com.hungrypanda.hungrypanda.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 /**
  * Created by Keji's Lab on 26/12/2017.
@@ -41,12 +58,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleStoreProfilesAdapter.MyViewHolder> {
 
-    private ArrayList<StoreProfileModel> storeProfile;
+    private ArrayList<StoreProfileModelwithLocation> storeProfile;
     private ArrayList<RestaurantUserRating> restaurantUserRatingsArray = new ArrayList<>();
+    private ArrayList<StoreProfileModelwithLocation> storeProfileModelwithLocationsArray = new ArrayList<>();
     private Context context;
     private Location deviceLocation = new Location("");
     private Location location1 = new Location("");
     private Location location2 = new Location("");
+
+
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -55,6 +76,7 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
         public ImageView restoImageBanner;
         public ImageView restoIcon;
         public RatingBar ratingBar;
+
 
         public MyViewHolder(View view){
 
@@ -69,12 +91,15 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
             lblRestaurantRange = (TextView) view.findViewById(R.id.restaurantRange);
 
         }
+
     }
 
-    public RecycleStoreProfilesAdapter(Context c, ArrayList<StoreProfileModel> storeProfile, Location deviceLocation){
+    public RecycleStoreProfilesAdapter(Context c, final ArrayList<StoreProfileModelwithLocation> storeProfile, Location deviceLocation){
         this.storeProfile = storeProfile;
         this.context = c;
 
+        this.deviceLocation.setLatitude(deviceLocation.getLatitude());
+        this.deviceLocation.setLatitude(deviceLocation.getLongitude());
     }
 
     @Override
@@ -85,7 +110,7 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
 
     @Override
     public void onBindViewHolder(final RecycleStoreProfilesAdapter.MyViewHolder holder, final int position) {
-        final StoreProfileModel storeProfileModel = storeProfile.get(position);
+        final StoreProfileModelwithLocation storeProfileModel = storeProfile.get(position);
         final Location storeLocation = new Location("");
         holder.lblStoreName.setText(storeProfileModel.getStoreName());
         holder.lnlStoreLocation.setText(storeProfileModel.getStoreAddress());
@@ -94,10 +119,8 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
             public void onClick(View view) {
                 Intent i = new Intent(context, ScrollingActivity.class);
                 i.putExtra("key", storeProfileModel.getRestaurantID());
+                i.putExtra("restoName", storeProfileModel.getStoreName());
                 context.startActivity(i);
-              /*  Activity activity = (Activity) context;
-                activity.finish();*/
-
             }
         });
         holder.restoIcon.clearColorFilter();
@@ -107,6 +130,7 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
                 Intent i = new Intent(context, ScrollingActivity.class);
                 i.putExtra("key", storeProfileModel.getRestaurantID());
                 context.startActivity(i);
+                i.putExtra("restoName", storeProfileModel.getStoreName());
             }
         });
         //GlideApp.with(context).load(storeProfileModel.getStoreBannerUrl()).into(holder.restoImageBanner);
@@ -119,6 +143,24 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
                 RestaurantLocationMapModel restaurantLocationMapModel = dataSnapshot.getValue(RestaurantLocationMapModel.class);
                 storeLocation.setLatitude(restaurantLocationMapModel.locationLatitude);
                 storeLocation.setLongitude(restaurantLocationMapModel.locationLongitude);
+                System.out.println(storeProfileModel.getStoreName()+" lat "+restaurantLocationMapModel.locationLatitude+" long "+restaurantLocationMapModel.locationLongitude );
+
+                SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
+                    @Override
+                    public void onLocationUpdated(Location location) {
+
+                        deviceLocation.setLatitude(location.getLatitude());
+                        deviceLocation.setLongitude(location.getLongitude());
+                        if (deviceLocation.distanceTo(storeLocation)>1000) {
+                            String range = ((deviceLocation.distanceTo(storeLocation) / 1000)+"").substring(0,((deviceLocation.distanceTo(storeLocation) / 1000)+"").indexOf(".")+3);
+                            holder.lblRestaurantRange.setText(range + " Km");
+                        }else {
+                            String range = ((deviceLocation.distanceTo(storeLocation))+"").substring(0,((deviceLocation.distanceTo(storeLocation))+"").indexOf(".")+3);
+                            holder.lblRestaurantRange.setText(range+"meters");
+                        }
+                    }
+                });
+
 
             }
             @Override
@@ -149,11 +191,10 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
-        FirebaseDatabase.getInstance().getReference().child(Utils.deviceCurrentLocation).child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
+/*        FirebaseDatabase.getInstance().getReference().child(Utils.deviceCurrentLocation).child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DeviceCurrentLocationMap deviceCurrentLocationMap = dataSnapshot.getValue(DeviceCurrentLocationMap.class);
@@ -176,7 +217,31 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
             public void onCancelled(DatabaseError databaseError) {
 
             }
+        });*/
+
+            SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
+            @Override
+            public void onLocationUpdated(Location location) {
+              /*  if (location.distanceTo(storeLocation)>1000) {
+                    String range = ((location.distanceTo(storeLocation) / 1000)+"").substring(0,((location.distanceTo(storeLocation) / 1000)+"").indexOf(".")+3);
+                    holder.lblRestaurantRange.setText(range + " Km");
+                }else {
+                    String range = ((location.distanceTo(storeLocation))+"").substring(0,((location.distanceTo(storeLocation))+"").indexOf(".")+3);
+                    holder.lblRestaurantRange.setText(range+" meters");
+                }*/
+              deviceLocation.setLatitude(location.getLatitude());
+              deviceLocation.setLongitude(location.getLongitude());
+                if (deviceLocation.distanceTo(storeLocation)>1000) {
+                    String range = ((deviceLocation.distanceTo(storeLocation) / 1000)+"").substring(0,((deviceLocation.distanceTo(storeLocation) / 1000)+"").indexOf(".")+2);
+                    holder.lblRestaurantRange.setText(range + " Km");
+                }else {
+                    String range = ((deviceLocation.distanceTo(storeLocation))+"").substring(0,((deviceLocation.distanceTo(storeLocation))+"").indexOf(".")+3);
+                    holder.lblRestaurantRange.setText(range+"meters");
+                }
+            }
         });
+
+
 
     }
 

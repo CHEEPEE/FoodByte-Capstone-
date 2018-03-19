@@ -31,7 +31,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +45,9 @@ import com.hungrypanda.hungrypanda.datamodels.RestaurantLocationModel;
 import com.hungrypanda.hungrypanda.mapModels.DeviceCurrentLocationMap;
 import com.hungrypanda.hungrypanda.mapModels.RestaurantLocationMapModel;
 import com.hungrypanda.hungrypanda.utils.Utils;
+
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 
 /**
@@ -109,23 +114,13 @@ public class PolyActivity extends AppCompatActivity
         // Add polylines to the map.
 
         // Polylines are useful to show a route or some other connection between points.
-        FirebaseDatabase.getInstance().getReference().child(Utils.deviceCurrentLocation).child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
+/*        FirebaseDatabase.getInstance().getReference().child(Utils.deviceCurrentLocation).child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DeviceCurrentLocationMap deviceCurrentLocationMap = dataSnapshot.getValue(DeviceCurrentLocationMap.class);
                 deviceCurrentLocation.setLatitude(deviceCurrentLocationMap.Latitude);
                 deviceCurrentLocation.setLongitude(deviceCurrentLocationMap.Longitude);
 
-              /*  Polyline polyline1;
-                polyline1 = googleMap.addPolyline(new PolylineOptions()
-                        .clickable(true).color(getResources().getColor(R.color.colorPrimary))
-                        .add(
-                                new LatLng(deviceCurrentLocation.getLatitude(),deviceCurrentLocation.getLongitude()),
-                                new LatLng(restaurantLocation.getLatitude(), restaurantLocation.getLongitude())
-                               ));
-                // Store a data object with the polyline, used here to indicate an arbitrary type.
-                polyline1.setTag("A");
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(deviceCurrentLocation.getLatitude(), deviceCurrentLocation.getLongitude()), 15));*/
                 mMap = googleMap;
                 LatLng origin = new LatLng(deviceCurrentLocation.getLatitude(),deviceCurrentLocation.getLongitude());
                 LatLng destination = new LatLng(restaurantLocation.getLatitude(),restaurantLocation.getLongitude());
@@ -148,6 +143,27 @@ public class PolyActivity extends AppCompatActivity
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+
+            }
+        });*/
+
+        SmartLocation.with(PolyActivity.this).location().start(new OnLocationUpdatedListener() {
+            @Override
+            public void onLocationUpdated(Location location) {
+                mMap = googleMap;
+                LatLng origin = new LatLng(location.getLatitude(),location.getLongitude());
+                LatLng destination = new LatLng(restaurantLocation.getLatitude(),restaurantLocation.getLongitude());
+                DrawRouteMaps.getInstance(PolyActivity.this)
+                        .draw(origin, destination, mMap);
+                DrawMarker.getInstance(PolyActivity.this).draw(mMap, origin, R.drawable.ic_restaurant_menu_white_24dp, "Origin Location");
+                DrawMarker.getInstance(PolyActivity.this).draw(mMap, destination, R.drawable.ic_restaurant_white_24dp, "Destination Location");
+
+                LatLngBounds bounds = new LatLngBounds.Builder()
+                        .include(origin)
+                        .include(destination).build();
+                Point displaySize = new Point();
+                getWindowManager().getDefaultDisplay().getSize(displaySize);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, displaySize.x, 250, 30));
 
             }
         });

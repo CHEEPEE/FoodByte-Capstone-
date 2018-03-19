@@ -23,13 +23,14 @@ public class RestaurantMenuRatingMapModel {
     public String itemMenu;
     public String itemMenukey;
     private Date ItemTimeDate;
+    public String imgUrl;
 
     public RestaurantMenuRatingMapModel(){
 
     }
     public RestaurantMenuRatingMapModel(String restaurantId, String userId,
                                         String userReview, Float userRating,
-                                        String usrname,String menu,String itemkey,Date timeStamp){
+                                        String usrname,String menu,String itemkey,Date timeStamp,String imgUri){
         this.restaurantId = restaurantId;
         this.userId = userId;
         this.userReview = userReview;
@@ -38,6 +39,7 @@ public class RestaurantMenuRatingMapModel {
         this.itemMenu = menu;
         this.itemMenukey = itemkey;
         this.ItemTimeDate = timeStamp;
+        this.imgUrl = imgUri;
 
     }
     @Exclude
@@ -48,7 +50,8 @@ public class RestaurantMenuRatingMapModel {
         result.put("userReview",userReview);
         result.put("userRating",userRating);
         result.put("username",username);
-
+        result.put("imgUrl",imgUrl);
+        result.put("ItemTimeDate",ItemTimeDate);
         return result;
     }
 }

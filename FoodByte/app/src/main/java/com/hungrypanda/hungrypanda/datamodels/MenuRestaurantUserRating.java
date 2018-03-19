@@ -15,7 +15,12 @@ public class MenuRestaurantUserRating {
     String restaurantMenuItem;
     String itemMenuKey;
     Date ratingDateTime;
+    String userImageUrl;
 
+
+    public String getUserReview(){
+        return userImageUrl;
+    }
     public Date getRatingDateTime(){
         return ratingDateTime;
     }
@@ -31,6 +36,9 @@ public class MenuRestaurantUserRating {
     public String getUserId(){
         return userId;
 
+    }
+    public String getUserImageUrl(){
+        return userImageUrl;
     }
     public String getUsername(){
         return username;
@@ -65,6 +73,10 @@ public class MenuRestaurantUserRating {
     public void setRatingDateTime(Date timeStamp){
         this.ratingDateTime = timeStamp;
     }
+    public void setUserImageUrl(String ImgUri){
+        this.userImageUrl = ImgUri;
+    }
+
 
 }
 
