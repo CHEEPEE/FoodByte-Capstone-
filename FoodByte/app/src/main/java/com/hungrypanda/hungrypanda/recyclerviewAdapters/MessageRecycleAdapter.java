@@ -69,6 +69,8 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
             holder.otherTimeStamp.setVisibility(View.VISIBLE);
             holder.chatBubbleOther.setText(messageDataModel.getMessage());
             holder.otherTimeStamp.setText(messageDataModel.getTimestamp());
+            holder.imgUser.setVisibility(View.INVISIBLE);
+            holder.imgOther.setVisibility(View.VISIBLE);
             try {
                 GlideApp.with(context).load(messageDataModel.getUserImg()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.imgOther);
             }catch (NullPointerException e){
@@ -86,6 +88,8 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
             //set invisible
             holder.chatBubbleOther.setVisibility(View.INVISIBLE);
             holder.otherTimeStamp.setVisibility(View.INVISIBLE);
+            holder.imgOther.setVisibility(View.INVISIBLE);
+            holder.imgUser.setVisibility(View.VISIBLE);
             try {
                 GlideApp.with(context).load(messageDataModel.getUserImg()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.imgUser);
             }catch (NullPointerException e){
@@ -93,11 +97,7 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<MessageRecycleAd
             }
 
         }
-        // System.out.println(messageDataModel.getMessage());
-     /*  holder.ratingBar.setRating(Float.parseFloat(restaurantUserRating.getUserRating().toString()));
-       System.out.println(restaurantUserRating.userReview());
-       holder.lblUsername.setText(restaurantUserRating.getUsername());
-       holder.lblRatingReview.setText(restaurantUserRating.userReview());*/
+
 
 
     }

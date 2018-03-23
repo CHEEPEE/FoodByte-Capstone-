@@ -1,6 +1,7 @@
 package com.hungrypanda.hungrypanda.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hungrypanda.hungrypanda.R;
+import com.hungrypanda.hungrypanda.activities.RestuarantAndProductActivity;
 import com.hungrypanda.hungrypanda.datamodels.StoreProfileModel;
 
 import java.util.ArrayList;
@@ -21,12 +23,19 @@ import java.util.ArrayList;
 
 public class RestaurantMenusFragment extends Fragment {
 
-
+    TextView logOut;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragement_restaurant_menu, container, false);
-
+        logOut = (TextView) rootView.findViewById(R.id.logOut);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               RestuarantAndProductActivity restuarantAndProductActivity = new RestuarantAndProductActivity();
+               restuarantAndProductActivity.signOut();
+            }
+        });
 
 
         return rootView;

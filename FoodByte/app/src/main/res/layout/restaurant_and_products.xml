@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:background="@color/colorWhite"
+        android:background="@color/colorPrimary"
         android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -22,10 +22,10 @@
             android:layout_height="?attr/actionBarSize"
 
             android:layout_weight="1"
-            android:background="@color/colorWhite"
+            android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
-            app:titleTextColor="@color/colorPrimary"
+            app:titleTextColor="@color/colorWhite"
             app:title="@string/app_name">
 
         </android.support.v7.widget.Toolbar>
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             app:tabTextColor="@color/colorText"
             app:tabSelectedTextColor="@color/colorPrimary"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/restaurantTab"

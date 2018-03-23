@@ -47,6 +47,8 @@ dependencies {
     compile 'io.nlopez.smartlocation:library:3.3.3'
     //routes library
     compile 'com.github.ar-android:DrawRouteMaps:1.0.0'
+    //sliding nav root
+    compile 'com.yarolegovich:sliding-root-nav:1.1.0'
 }
 
 

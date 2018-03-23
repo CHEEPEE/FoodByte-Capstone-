@@ -1,5 +1,6 @@
 package com.hungrypanda.hungrypanda.activities;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,7 +23,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -41,6 +46,7 @@ import com.hungrypanda.hungrypanda.fragments.RestaurantFragment;
 import com.hungrypanda.hungrypanda.fragments.RestaurantMenusFragment;
 import com.hungrypanda.hungrypanda.mapModels.DeviceCurrentLocationMap;
 import com.hungrypanda.hungrypanda.utils.Utils;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -108,6 +114,20 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
 
+        //sliding Root Nav
+
+        new SlidingRootNavBuilder(this)
+                .withDragDistance(150) //Horizontal translation of a view. Default == 180dp
+                .withRootViewScale(1) //Content view's scale will be interpolated between 1f and 0.7f. Default == 0.65f;
+                .withRootViewElevation(10) //Content view's elevation will be interpolated between 0 and 10dp. Default == 8.
+                .withRootViewYTranslation(4) //Content view's translationY will be interpolated between 0 and 4. Default == 0
+                .withMenuLayout(R.layout.sliding_root_nav)
+                .inject();
+
+       setSupportActionBar(toolbar);
+       toolbar.inflateMenu(R.menu.menu_test_tabed);
+
+
 
     }
 
@@ -128,6 +148,7 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            signOut();
             return true;
         }
 
@@ -164,7 +185,7 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 1;
         }
     }
 
@@ -223,5 +244,28 @@ public class RestuarantAndProductActivity extends AppCompatActivity {
 
     public Location getLastKnownLocation(){
         return mLastKnownLocation;
+    }
+
+    public void signOut(){
+        GoogleSignInClient mGoogleSignInClient ;
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {  //signout Google
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseAuth.getInstance().signOut(); //signout firebase
+                        Intent setupIntent = new Intent(getBaseContext(),LoginActivity.class/*To ur activity calss*/);
+                        Toast.makeText(getBaseContext(), "Logged Out", Toast.LENGTH_LONG).show(); //if u want to show some text
+                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        RestaurantFragment restaurantFragment = new RestaurantFragment();
+                        restaurantFragment.storeProfileModelwithLocationArrayList.clear();
+                        finish();
+                        startActivity(setupIntent);
+                    }
+                });
     }
 }

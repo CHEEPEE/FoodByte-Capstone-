@@ -168,7 +168,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/ic_rating" />
 
                     <TextView
-                        android:id="@+id/lblRateUs"
+                        android:id="@+id/lblChat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Message Us

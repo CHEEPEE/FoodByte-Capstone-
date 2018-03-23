@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
         <activity android:name=".activities.LoginActivity"
             android:theme="@style/AppThemeLogin">
             <intent-filter>

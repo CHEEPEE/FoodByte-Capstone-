@@ -67,7 +67,7 @@ import io.nlopez.smartlocation.SmartLocation;
 public class RestaurantFragment extends Fragment {
     TextView lblRestaurantName,lblRestaurantAddress;
     ArrayList<StoreProfileModel> storeProfileModels = new ArrayList<>();
-    ArrayList<StoreProfileModelwithLocation> storeProfileModelwithLocationArrayList = new ArrayList<>();
+    public ArrayList<StoreProfileModelwithLocation> storeProfileModelwithLocationArrayList = new ArrayList<>();
     RecyclerView rvRestaurantList;
     DatabaseReference mDatabase;
     RecycleStoreProfilesAdapter recycleStoreProfilesAdapter;
@@ -82,8 +82,6 @@ public class RestaurantFragment extends Fragment {
     private GoogleApiClient googleApiClient;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, Bundle savedInstanceState) {
@@ -95,10 +93,13 @@ public class RestaurantFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         context = getActivity();
         getLocation();
+
+
         layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         rvRestaurantList.setLayoutManager(layoutManager);
         recycleStoreProfilesAdapter = new RecycleStoreProfilesAdapter(getContext(),storeProfileModelwithLocationArrayList,mLastKnownLocation);
         rvRestaurantList.setAdapter(recycleStoreProfilesAdapter);
+        recycleStoreProfilesAdapter.notifyDataSetChanged();
 
         mGeoDataClient = Places.getGeoDataClient(getContext(), null);
 
@@ -113,7 +114,7 @@ public class RestaurantFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 storeProfileModels.clear();
-
+                storeProfileModelwithLocationArrayList.clear();
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     StoreProfileModel storeProfileModel = new StoreProfileModel();
                     StoreProfileInformationMap storeProfileInformationMap = dataSnapshot1.getValue(StoreProfileInformationMap.class);
@@ -124,9 +125,10 @@ public class RestaurantFragment extends Fragment {
                     storeProfileModel.setStoreContact(storeProfileInformationMap.storeContact);
                     storeProfileModel.setRestaurantID(storeProfileInformationMap.restaurantID);
                     storeProfileModels.add(storeProfileModel);
+                    recycleStoreProfilesAdapter.notifyDataSetChanged();
 
                 }
-                recycleStoreProfilesAdapter.notifyDataSetChanged();
+
 
             }
 
@@ -142,6 +144,7 @@ public class RestaurantFragment extends Fragment {
                 SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
                     @Override
                     public void onLocationUpdated(final Location location) {
+
                         for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                             final StoreProfileInformationMap storeProfileInformationMap = dataSnapshot1.getValue(StoreProfileInformationMap.class);
                             FirebaseDatabase.getInstance().getReference().child(Utils.restaurantLocation).child(storeProfileInformationMap.restaurantID).addValueEventListener(new ValueEventListener() {
@@ -172,11 +175,6 @@ public class RestaurantFragment extends Fragment {
                                         }
                                     });
                                     Collections.reverse(storeProfileModelwithLocationArrayList);
-                                    for (int i = 0;i<storeProfileModelwithLocationArrayList.size();i++){
-                                        System.out.println(storeProfileModelwithLocationArrayList.get(i).getLocationRange());
-                                    }
-
-
                                     recycleStoreProfilesAdapter.notifyDataSetChanged();
                                 }
 
@@ -184,12 +182,15 @@ public class RestaurantFragment extends Fragment {
                                 public void onCancelled(DatabaseError databaseError) {
 
                                 }
+
                             });
                         }
+                        recycleStoreProfilesAdapter.notifyDataSetChanged();
 
                     }
-                });
 
+                });
+                recycleStoreProfilesAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -197,7 +198,6 @@ public class RestaurantFragment extends Fragment {
 
             }
         });
-
 
         return rootView;
     }
@@ -211,6 +211,7 @@ public class RestaurantFragment extends Fragment {
               mLastKnownLocation.setLongitude(location.getLongitude());
             }
         });
+
 
     }
 

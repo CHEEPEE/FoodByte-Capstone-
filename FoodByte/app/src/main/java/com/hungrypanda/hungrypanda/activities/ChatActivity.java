@@ -66,8 +66,6 @@ public class ChatActivity extends AppCompatActivity {
         inputMsg = (EditText) findViewById(R.id.inputmsg);
         restoLabel.setText(getIntent().getExtras().getString("restoName"));
 
-
-
         mDataBase.child(Utils.chattingSystem).child(Utils.chatsList).child(restaurantId).child(mAuth.getUid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -79,6 +77,8 @@ public class ChatActivity extends AppCompatActivity {
                 messageDataModel.setUserImg(messageMapmodel.userImg);
                 messageDataModelsArrayList.add(messageDataModel);
                 messageRecycleAdapter.notifyDataSetChanged();
+                chatRecyclerView.scrollToPosition(messageDataModelsArrayList.size()-1);
+
             }
 
             @Override
