@@ -121,24 +121,6 @@ public class Utils {
 
         return formattedDate;
     }
-//    public void signOut(final Context context, final Activity activity){
-//        GoogleSignInClient mGoogleSignInClient ;
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken(getString(R.string.default_web_client_id))
-//                .requestEmail()
-//                .build();
-//        mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
-//        mGoogleSignInClient.signOut().addOnCompleteListener(context,
-//                new OnCompleteListener<Void>() {  //signout Google
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        FirebaseAuth.getInstance().signOut(); //signout firebase
-//                        Intent setupIntent = new Intent(context,activity.getClass()/*To ur activity calss*/);
-//                        Toast.makeText(context, "Logged Out", Toast.LENGTH_LONG).show(); //if u want to show some text
-//                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        activity.startActivity(setupIntent);
-//                        activity.finish();
-//                    }
-//        });
-//    }
+
 }
+

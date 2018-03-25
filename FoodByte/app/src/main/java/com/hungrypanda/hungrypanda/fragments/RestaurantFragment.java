@@ -45,6 +45,7 @@ import com.hungrypanda.hungrypanda.datamodels.StoreProfileModelwithLocation;
 import com.hungrypanda.hungrypanda.mapModels.DeviceCurrentLocationMap;
 import com.hungrypanda.hungrypanda.mapModels.RestaurantLocationMapModel;
 import com.hungrypanda.hungrypanda.mapModels.StoreProfileInformationMap;
+import com.hungrypanda.hungrypanda.mapModels.StoreProfileInformationMapWithLocation;
 import com.hungrypanda.hungrypanda.recyclerviewAdapters.RecycleStoreProfilesAdapter;
 import com.hungrypanda.hungrypanda.utils.Utils;
 
@@ -53,9 +54,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
@@ -95,10 +100,13 @@ public class RestaurantFragment extends Fragment {
         getLocation();
 
 
+
         layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         rvRestaurantList.setLayoutManager(layoutManager);
         recycleStoreProfilesAdapter = new RecycleStoreProfilesAdapter(getContext(),storeProfileModelwithLocationArrayList,mLastKnownLocation);
         rvRestaurantList.setAdapter(recycleStoreProfilesAdapter);
+        recycleStoreProfilesAdapter.notifyDataSetChanged();
+        storeProfileModelwithLocationArrayList.clear();
         recycleStoreProfilesAdapter.notifyDataSetChanged();
 
         mGeoDataClient = Places.getGeoDataClient(getContext(), null);
@@ -128,69 +136,79 @@ public class RestaurantFragment extends Fragment {
                     recycleStoreProfilesAdapter.notifyDataSetChanged();
 
                 }
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mDatabase.child(Utils.storeProfiles).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
+                mDatabase.child(Utils.storeProfiles).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onLocationUpdated(final Location location) {
-
-                        for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                            final StoreProfileInformationMap storeProfileInformationMap = dataSnapshot1.getValue(StoreProfileInformationMap.class);
-                            FirebaseDatabase.getInstance().getReference().child(Utils.restaurantLocation).child(storeProfileInformationMap.restaurantID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    RestaurantLocationMapModel restaurantLocationMapModel = dataSnapshot.getValue(RestaurantLocationMapModel.class);
-                                    Location storeLocation = new Location("");
-                                    storeLocation.setLatitude(restaurantLocationMapModel.locationLatitude);
-                                    storeLocation.setLongitude(restaurantLocationMapModel.locationLongitude);
-
-                                    StoreProfileModelwithLocation storeProfileModelwithLocation = new StoreProfileModelwithLocation();
-                                    storeProfileModelwithLocation.setStoreName(storeProfileInformationMap.storeName);
-                                    storeProfileModelwithLocation.setStoreBannerUrl(storeProfileInformationMap.storeBannerUrl);
-                                    storeProfileModelwithLocation.setStoreProfileUrl(storeProfileInformationMap.storeProfileUrl);
-                                    storeProfileModelwithLocation.setStoreAddress(storeProfileInformationMap.storeAddress);
-                                    storeProfileModelwithLocation.setStoreContact(storeProfileInformationMap.storeContact);
-                                    storeProfileModelwithLocation.setRestaurantID(storeProfileInformationMap.restaurantID);
-                                    storeProfileModelwithLocation.setLocationRange(location.distanceTo(storeLocation));
-                                    storeProfileModelwithLocationArrayList.add(storeProfileModelwithLocation);
-
-
-                                    Collections.sort(storeProfileModelwithLocationArrayList, new Comparator<StoreProfileModelwithLocation>() {
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
+                            @Override
+                            public void onLocationUpdated(final Location location) {
+                                storeProfileModelwithLocationArrayList.clear();
+                                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                                    final StoreProfileInformationMap storeProfileInformationMap = dataSnapshot1.getValue(StoreProfileInformationMap.class);
+                                    FirebaseDatabase.getInstance().getReference().child(Utils.restaurantLocation).child(storeProfileInformationMap.restaurantID).addValueEventListener(new ValueEventListener() {
                                         @Override
-                                        public int compare(StoreProfileModelwithLocation storeProfileModelwithLocation, StoreProfileModelwithLocation t1) {
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            return t1.getLocationRange().compareTo(storeProfileModelwithLocation.getLocationRange());
+                                            storeProfileModelwithLocationArrayList.remove(storeProfileInformationMap);
+                                            RestaurantLocationMapModel restaurantLocationMapModel = dataSnapshot.getValue(RestaurantLocationMapModel.class);
+                                            Location storeLocation = new Location("");
+                                            storeLocation.setLatitude(restaurantLocationMapModel.locationLatitude);
+                                            storeLocation.setLongitude(restaurantLocationMapModel.locationLongitude);
+                                            StoreProfileModelwithLocation storeProfileModelwithLocation = new StoreProfileModelwithLocation();
+                                            storeProfileModelwithLocation.setStoreName(storeProfileInformationMap.storeName);
+                                            storeProfileModelwithLocation.setStoreBannerUrl(storeProfileInformationMap.storeBannerUrl);
+                                            storeProfileModelwithLocation.setStoreProfileUrl(storeProfileInformationMap.storeProfileUrl);
+                                            storeProfileModelwithLocation.setStoreAddress(storeProfileInformationMap.storeAddress);
+                                            storeProfileModelwithLocation.setStoreContact(storeProfileInformationMap.storeContact);
+                                            storeProfileModelwithLocation.setRestaurantID(storeProfileInformationMap.restaurantID);
+                                            storeProfileModelwithLocation.setLocationRange(location.distanceTo(storeLocation));
+                                            storeProfileModelwithLocationArrayList.add(storeProfileModelwithLocation);
+
+
+                                            Collections.sort(storeProfileModelwithLocationArrayList, new Comparator<StoreProfileModelwithLocation>() {
+                                                @Override
+                                                public int compare(StoreProfileModelwithLocation storeProfileModelwithLocation, StoreProfileModelwithLocation t1) {
+
+                                                    return t1.getLocationRange().compareTo(storeProfileModelwithLocation.getLocationRange());
+
+                                                }
+                                            });
+                                            Collections.reverse(storeProfileModelwithLocationArrayList);
+
+                                            Object[] st = storeProfileModelwithLocationArrayList.toArray();
+                                            for (Object s : st) {
+                                                if (storeProfileModelwithLocationArrayList.indexOf(s) != storeProfileModelwithLocationArrayList.lastIndexOf(s)) {
+                                                    storeProfileModelwithLocationArrayList.remove(storeProfileModelwithLocationArrayList.lastIndexOf(s));
+                                                }
+                                            }
+                                            recycleStoreProfilesAdapter.notifyDataSetChanged();
+
 
                                         }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+
                                     });
-                                    Collections.reverse(storeProfileModelwithLocationArrayList);
-                                    recycleStoreProfilesAdapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
 
                                 }
 
-                            });
-                        }
-                        recycleStoreProfilesAdapter.notifyDataSetChanged();
+                                ;
+                            }
+
+                        });
 
                     }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
                 });
-                recycleStoreProfilesAdapter.notifyDataSetChanged();
+
+
             }
 
             @Override
@@ -198,6 +216,14 @@ public class RestaurantFragment extends Fragment {
 
             }
         });
+
+        Object[] st = storeProfileModelwithLocationArrayList.toArray();
+        for (Object s : st) {
+            if (storeProfileModelwithLocationArrayList.indexOf(s) != storeProfileModelwithLocationArrayList.lastIndexOf(s)) {
+                storeProfileModelwithLocationArrayList.remove(storeProfileModelwithLocationArrayList.lastIndexOf(s));
+            }
+        }
+        recycleStoreProfilesAdapter.notifyDataSetChanged();
 
         return rootView;
     }
