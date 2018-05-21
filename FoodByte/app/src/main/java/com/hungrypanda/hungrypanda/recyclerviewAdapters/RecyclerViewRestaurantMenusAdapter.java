@@ -91,6 +91,7 @@ public class RecyclerViewRestaurantMenusAdapter extends RecyclerView.Adapter<Rec
     public void onBindViewHolder(final RecyclerViewRestaurantMenusAdapter.MyViewHolder holder, final int position) {
         final MenuItemGrid menuItemGridModel = menuItemGridArrayList.get(position);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        GlideApp.with(context).clear(holder.menuBanner);
         GlideApp.with(context).load(menuItemGridModel.getItemBannerUrl()).placeholder(R.drawable.image_placeholder).centerCrop().into(holder.menuBanner);
         holder.menuLabel.setText(menuItemGridModel.getiName());
         holder.menuPrice.setText("₱ "+menuItemGridModel.getItemPrice());
@@ -161,7 +162,6 @@ public class RecyclerViewRestaurantMenusAdapter extends RecyclerView.Adapter<Rec
             public void onClick(View view) {
 
                 final Dialog dialog = new Dialog(context);
-
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setCanceledOnTouchOutside(true);
@@ -180,7 +180,7 @@ public class RecyclerViewRestaurantMenusAdapter extends RecyclerView.Adapter<Rec
                 menuRatingList.setAdapter(menuUserRatingRecycler);
                 lblItemName.setText(menuItemGridModel.getiName());
                 menuUserRatingRecycler.notifyDataSetChanged();
-
+                GlideApp.with(context).clear(itemImage);
                 GlideApp.with(context).load(menuItemGridModel.getItemBannerUrl()).placeholder(R.drawable.image_placeholder).centerCrop().into(itemImage);
                 btnSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override

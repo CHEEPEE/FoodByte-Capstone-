@@ -214,7 +214,7 @@ RecyclerView.LayoutManager layoutManager;
         });
 
         recyclerViewRestaurantMenusAdapter = new RecyclerViewRestaurantMenusAdapter(context,menuItemGridArrayList,restaurantID);
-        layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
         rv_MenuItemList.setLayoutManager(layoutManager);
         rv_MenuItemList.setAdapter(recyclerViewRestaurantMenusAdapter);
         rv_MenuItemList.setNestedScrollingEnabled(false);
@@ -294,8 +294,6 @@ RecyclerView.LayoutManager layoutManager;
                                 dialog.dismiss();
                             }
                         });
-
-
 
                     }
                 }

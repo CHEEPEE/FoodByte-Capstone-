@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,9 +23,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hungrypanda.hungrypanda.R;
+import com.hungrypanda.hungrypanda.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
     Button bntLogInGoogle;
@@ -48,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         bntLogInGoogle = (Button)findViewById(R.id.bntLogInGoogle);
@@ -97,11 +101,37 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             final FirebaseUser user = mAuth.getCurrentUser();
+                            mDatabase.child(Utils.customersProfile).child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            Intent i  = new Intent(context,RestuarantAndProductActivity.class);
-                            startActivity(i);
+                                      try {
+                                          if (dataSnapshot.getValue()==null){
+                                            Intent i  = new Intent(LoginActivity.this,UserRegistration.class);
+                                            startActivity(i);
+                                            mDatabase.keepSynced(true);
+                                            finish();
+                                              System.out.println("login");
+                                          }else {
+                                            Intent i  = new Intent(context,RestuarantAndProductActivity.class);
+                                            startActivity(i);
+                                            mDatabase.keepSynced(true);
+                                              System.out.println("login not null "+dataSnapshot);
+                                              finish();
+                                          }
+                                      }catch (NullPointerException e){
 
-                            mDatabase.keepSynced(true);
+                                      }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -120,9 +150,39 @@ public class LoginActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser()!=null){
             final FirebaseUser user = mAuth.getCurrentUser();
             mDatabase.keepSynced(true);
-            Intent i = new Intent(context,RestuarantAndProductActivity.class);
+/*            Intent i = new Intent(context,RestuarantAndProductActivity.class);
             startActivity(i);
-            finish();
+            finish();*/
+
+            mDatabase.child("customersProfile").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                 try {
+                     if (dataSnapshot.getValue()==null){
+                        Intent i  = new Intent(LoginActivity.this,UserRegistration.class);
+                        startActivity(i);
+                        mDatabase.keepSynced(true);
+                         System.out.println("login"+dataSnapshot);
+                         finish();
+                     }else {
+
+                        Intent i  = new Intent(context,RestuarantAndProductActivity.class);
+                        startActivity(i);
+                        mDatabase.keepSynced(true);
+                         System.out.println("login not Null"+dataSnapshot);
+                         finish();
+                     }
+                 }catch (NullPointerException e){
+
+                 }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
         }
     }

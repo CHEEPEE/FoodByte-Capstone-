@@ -58,7 +58,7 @@ import io.nlopez.smartlocation.SmartLocation;
 
 public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleStoreProfilesAdapter.MyViewHolder> {
 
-    private ArrayList<StoreProfileModelwithLocation> storeProfile;
+    private ArrayList<StoreProfileModel> storeProfile;
     private ArrayList<RestaurantUserRating> restaurantUserRatingsArray = new ArrayList<>();
     private ArrayList<StoreProfileModelwithLocation> storeProfileModelwithLocationsArray = new ArrayList<>();
     private Context context;
@@ -74,7 +74,7 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
 
         public TextView lblStoreName,lnlStoreLocation,lblRestaurantRange,lblReview,lblRatingNumber;
         public ImageView restoImageBanner;
-        public ImageView restoIcon;
+        public CircleImageView restoIcon;
         public RatingBar ratingBar;
 
 
@@ -84,7 +84,7 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
             lblRatingNumber = (TextView) view.findViewById(R.id.ratingNumber);
             lblReview = (TextView) view.findViewById(R.id.lblUserReviews);
             ratingBar = (RatingBar) view.findViewById(R.id.ratingStarContainer);
-            restoIcon = (ImageView) view.findViewById(R.id.restoIcon);
+            restoIcon = (CircleImageView) view.findViewById(R.id.restoIcon);
           //restoImageBanner = (ImageView) view.findViewById(R.id.restoImageBanner);
             lblStoreName = (TextView) view.findViewById(R.id.lblRestaurantName);
             lnlStoreLocation = (TextView) view.findViewById(R.id.lblRestaurantLocation);
@@ -94,7 +94,7 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
 
     }
 
-    public RecycleStoreProfilesAdapter(Context c, final ArrayList<StoreProfileModelwithLocation> storeProfile, Location deviceLocation){
+    public RecycleStoreProfilesAdapter(Context c, final ArrayList<StoreProfileModel> storeProfile, Location deviceLocation){
         this.storeProfile = storeProfile;
         this.context = c;
 
@@ -104,13 +104,13 @@ public class RecycleStoreProfilesAdapter extends RecyclerView.Adapter<RecycleSto
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.restor_list_row,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_restor,parent,false);
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final RecycleStoreProfilesAdapter.MyViewHolder holder, final int position) {
-        final StoreProfileModelwithLocation storeProfileModel = storeProfile.get(position);
+        final StoreProfileModel storeProfileModel = storeProfile.get(position);
         final Location storeLocation = new Location("");
         holder.lblStoreName.setText(storeProfileModel.getStoreName());
         holder.lnlStoreLocation.setText(storeProfileModel.getStoreAddress());

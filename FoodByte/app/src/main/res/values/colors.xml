@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ef5350</color>
+    <color name="colorPrimary">#96DFE8</color>
     <color name="colorPrimaryDark">#FC7813</color>
-    <color name="colorAccent">#616161</color>
+    <color name="colorAccent">#FC531C</color>
     <color name="colorText">#C0C0C0</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorPrimaryDarkLogin">#d7fc7813</color>
     <color name="colorTextPrimary">#424242</color>
+    <color name="colorTextSecondary">#959497</color>
     <color name="colorBanner">#ef9a9a</color><!--#772b2b2b-->
     <color name="cardtransBannerColorMenu">#e0ef5350</color>
-    <color name="colorBlack">#000</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorOrange">#F9A11F</color>
     <color name="colorRouteLine">#FF4081</color>
+    <color name="gradColorTop">#f1cca049</color>
+    <color name="gradColorMid">#ef6d1745</color>
+    <color name="gradColorBot">#edb0240e</color>
+    <color name="trans">#00b0240e</color>
+    <color name="colorInputBackground">#F7F8FC</color>
+    <color name="colorGoogle">#D54B3D</color>
+    <color name="colorFacebook">#4167B0</color>
+    <color name="colorYellow">#F5CD35</color>
 </resources>

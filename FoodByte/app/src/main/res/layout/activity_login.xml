@@ -1,76 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    tools:context="com.hungrypanda.hungrypanda.activities.LoginActivity">
-
-    <ImageView
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/loginbg" />
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:layout_marginTop="-25dp"
+        android:fitsSystemWindows="true"
+        tools:context="com.hungrypanda.hungrypanda.activities.LoginActivity">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000">
+        android:layout_height="match_parent">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:paddingBottom="20dp"
+                android:scaleType="fitXY"
 
-    </RelativeLayout>
+                android:src="@drawable/login_background_blue" />
 
-    <Button
-        android:id="@+id/bntLogInGoogle"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/loginbutton"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:text="Login with Google+"
-        android:textAllCaps="false"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.59000003" />
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/loginbutton"
+                android:drawableLeft="@drawable/ic_user"
+                android:drawablePadding="15dp"
+                android:drawableTint="@color/colorTextSecondary"
+                android:fontFamily="@font/khemerui"
+                android:paddingLeft="10dp"
+                android:text=""
+                android:hint="Username or Email"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <Button
-        android:layout_width="180dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/loginbutton"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:text="Login with Facabook"
-        android:textAllCaps="false"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bntLogInGoogle" />
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textPassword"
+                android:background="@drawable/loginbutton"
+                android:drawableLeft="@drawable/ic_lock"
+                android:drawablePadding="15dp"
+                android:drawableTint="@color/colorTextSecondary"
+                android:fontFamily="@font/khemerui"
+                android:paddingLeft="10dp"
+                android:hint="Password"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="14sp"
 
-    <ImageView
-        android:id="@+id/LogInImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/foodhub_logo"
-        app:layout_constraintBottom_toTopOf="@+id/bntLogInGoogle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/username" />
+
+            <Button
+                android:id="@+id/bntLogIn"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/btn_login"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="Connect with Google"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password" />
+
+            <TextView
+                android:id="@+id/or"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/khemerui"
+                android:text="OR"
+                android:textColor="@color/colorTextSecondary"
+                app:layout_constraintBottom_toTopOf="@+id/bntLogInGoogle"
+                app:layout_constraintEnd_toEndOf="@+id/bntLogIn"
+                app:layout_constraintStart_toStartOf="@+id/bntLogIn"
+                app:layout_constraintTop_toBottomOf="@+id/bntLogIn" />
+
+            <Button
+                android:id="@+id/bntLogInGoogle"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/btn_login_google"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="Connect with Google"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/or" />
+
+            <Button
+                android:id="@+id/bntLogInFacebook"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_btn_facebook"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="Connect with Google"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bntLogInGoogle" />
+
+            <ImageView
+                android:id="@+id/LogInImage"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/foodhubblue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
 
+    </android.support.constraint.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>

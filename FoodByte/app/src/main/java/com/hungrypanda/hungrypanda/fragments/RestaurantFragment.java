@@ -101,9 +101,9 @@ public class RestaurantFragment extends Fragment {
 
 
 
-        layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
         rvRestaurantList.setLayoutManager(layoutManager);
-        recycleStoreProfilesAdapter = new RecycleStoreProfilesAdapter(getContext(),storeProfileModelwithLocationArrayList,mLastKnownLocation);
+        recycleStoreProfilesAdapter = new RecycleStoreProfilesAdapter(getContext(),storeProfileModels,mLastKnownLocation);
         rvRestaurantList.setAdapter(recycleStoreProfilesAdapter);
         recycleStoreProfilesAdapter.notifyDataSetChanged();
         storeProfileModelwithLocationArrayList.clear();
@@ -134,7 +134,6 @@ public class RestaurantFragment extends Fragment {
                     storeProfileModel.setRestaurantID(storeProfileInformationMap.restaurantID);
                     storeProfileModels.add(storeProfileModel);
                     recycleStoreProfilesAdapter.notifyDataSetChanged();
-
                 }
                 mDatabase.child(Utils.storeProfiles).addValueEventListener(new ValueEventListener() {
                     @Override

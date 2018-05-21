@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -12,11 +12,10 @@
         <item name="colorPrimary">@color/colorBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item xmlns:tools="http://schemas.android.com/tools" name="android:statusBarColor" tools:targetAPI="21">
-            @color/colorBlack
+        <item xmlns:tools="http://schemas.android.com/tools" name="android:statusBarColor" tools:targetAPI="21">@color/trans
         </item>
         <item xmlns:tools="http://schemas.android.com/tools" name="android:navigationBarColor" tools:targetAPI="21">
-            @color/colorBlack
+            @color/trans
         </item>
     </style>
 
@@ -49,9 +48,20 @@
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/colorPrimary</item>
-        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorYellow</item>
+        <item name="colorControlActivated">@color/colorYellow</item>
     </style>
+
+
+    <!--transparent-->
+
+        <style name="tranparentStatusBarTheme">
+            <item name="android:statusBarColor" tools:targetAPI="21">@android:color/transparent</item>
+            <item name="android:navigationBarColor" tools:targetAPI="21">@android:color/transparent</item>
+            <item name="android:windowTranslucentStatus" tools:targetAPI="21">true</item>
+            <item name="android:windowTranslucentNavigation" tools:targetAPI="21">true</item>
+        </style>
+
 
 
 
